@@ -37,6 +37,13 @@ int main(int argc, char* argv[]) {
   pthread_t* thread_handles;
   time_t t;
   double start, finish;
+  pthread_attr_t attr;
+
+  
+  pthread_attr_init(&attr);
+  if(pthread_attr_setschedpolicy(&attr, SCHED_RR) != 0)
+    fprintf(stderr, "Unable to set policy.\n");
+  
 
 
   /* Intializes random number generator */
@@ -64,7 +71,7 @@ int main(int argc, char* argv[]) {
   GET_TIME(start);
   
   for(thread = 0; thread < NUMBER_THREADS; thread++){
-    pthread_create(&thread_handles[thread], NULL, Pth_empty, &rank[thread]);
+    pthread_create(&thread_handles[thread], &attr, Pth_empty, &rank[thread]);
   }
 
   for(thread = 0; thread < NUMBER_THREADS; thread++){
