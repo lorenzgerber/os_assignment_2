@@ -46,7 +46,6 @@ int main(int argc, char* argv[]) {
   if(pthread_attr_setschedpolicy(&attr, SCHED_RR) != 0)
     fprintf(stderr, "Unable to set policy.\n");
 
-
   /* Intializes random number generator */
   srand((unsigned) time(&t));
 
