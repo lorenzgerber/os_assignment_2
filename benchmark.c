@@ -39,8 +39,8 @@ int main(int argc, char* argv[]) {
   pthread_attr_t attr;
   time_t t;
   double start, finish;
-  int array_size = 60000;
-  int step_size = -2000;
+  int array_size = 5000;
+  int step_size = -200;
 
   pthread_attr_init(&attr);
   if(pthread_attr_setschedpolicy(&attr, SCHED_RR) != 0)
