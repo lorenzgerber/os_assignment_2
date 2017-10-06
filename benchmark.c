@@ -52,6 +52,8 @@ int main(int argc, char* argv[]) {
   int array_size = 5000;
   int step_size = -200;
 
+
+
   pthread_attr_init(&attr);
   if(pthread_attr_setschedpolicy(&attr, SCHED_FIFO) != 0)
     fprintf(stderr, "Unable to set policy.\n");
@@ -68,14 +70,19 @@ int main(int argc, char* argv[]) {
     thread_data[i].rank = i;
   }
 
+
   for(int i = 0; i < NUMBER_THREADS; i++){
     array_lengths[i] = array_size;
     data_arrays[i] = malloc(sizeof(int)*array_lengths[i]);
     for(int j = 0; j < array_lengths[i]; j++){
-      data_arrays[i][j] = rand() % 255;
+      //data_arrays[i][j] = rand() % 255;
+      data_arrays[i][j] = array_lengths[i] - j;
     }
     array_size += step_size;
   }
+
+
+
 
 
 
@@ -92,6 +99,8 @@ int main(int argc, char* argv[]) {
 
   // Collecting Threads
   for(thread = 0; thread < NUMBER_THREADS; thread++){
+
+
     pthread_join(thread_handles[thread], NULL);
   }
 
@@ -117,7 +126,7 @@ void *Pth_empty(void* data){
   //int myrank = *((int*) rank);
   struct thread_data thread_data = *(struct thread_data*) data;
   GET_TIME(thread_data.running);
-  printf("Thread: %d starting\n", thread_data.rank);
+  printf("Thread %d starting, time waiting to run %e\n", thread_data.rank, thread_data.running - thread_data.runnable);
   GET_TIME(start_thread[thread_data.rank]);
   bubble_sort(data_arrays[thread_data.rank], array_lengths[thread_data.rank]);
   GET_TIME(finish_thread[thread_data.rank]);
