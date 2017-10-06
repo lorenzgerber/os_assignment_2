@@ -5,14 +5,24 @@
 #include "timer.h"
 #define NUMBER_THREADS 20
 
+typedef struct thread_data {
+  int rank;
+  double runnable;
+  double running;
+
+} thread_data;
+
 /* Global variables */
 int     thread_count = 1;
-void *Pth_empty(void* rank);
+void *Pth_empty(void* thread_data);
 int array_lengths[NUMBER_THREADS];
 int *data_arrays[NUMBER_THREADS];
 double start_thread[NUMBER_THREADS];
 double finish_thread[NUMBER_THREADS];
 
+/*
+ * bubble_sort
+ */
 void bubble_sort(int a[], int n){
 
   int list_length, i, temp;
@@ -27,7 +37,7 @@ void bubble_sort(int a[], int n){
     }
   }
 }
-		 
+
 
 
 
@@ -43,7 +53,7 @@ int main(int argc, char* argv[]) {
   int step_size = -200;
 
   pthread_attr_init(&attr);
-  if(pthread_attr_setschedpolicy(&attr, SCHED_RR) != 0)
+  if(pthread_attr_setschedpolicy(&attr, SCHED_FIFO) != 0)
     fprintf(stderr, "Unable to set policy.\n");
 
   /* Intializes random number generator */
@@ -52,8 +62,10 @@ int main(int argc, char* argv[]) {
 
   // Create data arrays
   int rank[NUMBER_THREADS];
+  struct thread_data thread_data[NUMBER_THREADS];
   for(int i = 0; i < NUMBER_THREADS; i++){
     rank[i] = i;
+    thread_data[i].rank = i;
   }
 
   for(int i = 0; i < NUMBER_THREADS; i++){
@@ -66,15 +78,19 @@ int main(int argc, char* argv[]) {
   }
 
 
+
   thread_handles = malloc(NUMBER_THREADS*sizeof(pthread_t));
-  
+
 
   GET_TIME(start);
-  
+
+  // Starting Threads
   for(thread = 0; thread < NUMBER_THREADS; thread++){
+    GET_TIME(thread_data[thread].runnable);
     pthread_create(&thread_handles[thread], &attr, Pth_empty, &rank[thread]);
   }
 
+  // Collecting Threads
   for(thread = 0; thread < NUMBER_THREADS; thread++){
     pthread_join(thread_handles[thread], NULL);
   }
@@ -97,13 +113,15 @@ int main(int argc, char* argv[]) {
 }
 
 /* dummy/ empty thread function */
-void *Pth_empty(void* rank){
-  int myrank = *((int*) rank);
-  
-  printf("Thread: %d starting\n", myrank);
-  GET_TIME(start_thread[myrank]);
-  bubble_sort(data_arrays[myrank], array_lengths[myrank]);
-  GET_TIME(finish_thread[myrank]);
-  printf("Thread: %d finishing\n", myrank);
+void *Pth_empty(void* data){
+  //int myrank = *((int*) rank);
+  struct thread_data thread_data = *(struct thread_data*) data;
+  GET_TIME(thread_data.running);
+  printf("Thread: %d starting\n", thread_data.rank);
+  GET_TIME(start_thread[thread_data.rank]);
+  bubble_sort(data_arrays[thread_data.rank], array_lengths[thread_data.rank]);
+  GET_TIME(finish_thread[thread_data.rank]);
+  printf("Thread: %d finishing\n", thread_data.rank);
+  printf("Thread %d, time waiting to run %e\n", thread_data.rank, thread_data.running - thread_data.runnable);
   return NULL;
 }
