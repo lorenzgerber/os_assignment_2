@@ -104,8 +104,10 @@ int main(int argc, char* argv[]) {
   // data output to stdout:
   // CPU time, Wall time, Wall time create until run, wall time run until finish
   for(int i = 0; i < NUMBER_THREADS; i++){
-    printf("sched_other dec %d %e %e %e %e\n",
-        i, thread_time[i].cpu_t_finish - thread_time[i].cpu_t_start,
+    printf("sched_other dec %d %d %e %e %e %e\n",
+        array_lengths[i],
+        i,
+        thread_time[i].cpu_t_finish - thread_time[i].cpu_t_start,
         thread_time[i].wall_t_finish - thread_time[i].wall_t_create,
         thread_time[i].wall_t_run - thread_time[i].wall_t_create,
         thread_time[i].wall_t_finish - thread_time[i].wall_t_run);
