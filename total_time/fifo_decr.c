@@ -138,6 +138,7 @@ int main(int argc, char* argv[]) {
   // data output to stdout:
   // CPU time, Wall time, Wall time create until run, wall time run until finish
 
+  /*
   for(int i = 0; i < NUMBER_THREADS; i++){
     printf("sched_fifo decr %d %d %e %e %e %e\n",
         array_lengths[i],
@@ -146,7 +147,9 @@ int main(int argc, char* argv[]) {
         thread_time[i].wall_t_finish - thread_time[i].wall_t_create,
         thread_time[i].wall_t_run - thread_time[i].wall_t_create,
         thread_time[i].wall_t_finish - thread_time[i].wall_t_run);
-	}
+	}*/
+
+  printf("sched_fifo decr %e\n", finish - start);
 
   free(thread_handles);
 
