@@ -54,8 +54,8 @@ int main(int argc, char* argv[]) {
   pthread_attr_t attr;
   struct sched_param schedParam;
   double start, finish;
-  int array_size = 1000;
-  int step_size = +200;
+  int array_size = 5000;
+  int step_size = 0;
   int retVal;
 
 
@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
   // CPU time, Wall time, Wall time create until run, wall time run until finish
 
   for(int i = 0; i < NUMBER_THREADS; i++){
-    printf("sched_rr incr %d %d %e %e %e %e\n",
+    printf("sched_rr high %d %d %e %e %e %e\n",
         array_lengths[i],
         i,
         thread_time[i].cpu_t_finish - thread_time[i].cpu_t_start,

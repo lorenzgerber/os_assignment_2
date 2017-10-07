@@ -54,8 +54,8 @@ int main(int argc, char* argv[]) {
   pthread_attr_t attr;
   struct sched_param schedParam;
   double start, finish;
-  int array_size = 1000;
-  int step_size = +200;
+  int array_size = 5000;
+  int step_size = -200;
   int retVal;
 
 
@@ -74,14 +74,14 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
 
-  retVal = pthread_attr_setschedpolicy(&attr, SCHED_RR);
+  retVal = pthread_attr_setschedpolicy(&attr, SCHED_OTHER);
   if (retVal)
   {
     fprintf(stderr, "pthread_attr_setschedpolicy error %d\n", retVal);
     exit(1);
   }
 
-  
+  /*
   schedParam.sched_priority = 1;
 
   retVal = pthread_attr_setschedparam(&attr, &schedParam);
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "pthread_attr_setschedparam error %d\n", retVal);
     exit(1);
   }
-  
+  */
 
   // Create data arrays
   int rank[NUMBER_THREADS];
@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
   // CPU time, Wall time, Wall time create until run, wall time run until finish
 
   for(int i = 0; i < NUMBER_THREADS; i++){
-    printf("sched_rr incr %d %d %e %e %e %e\n",
+    printf("sched_other decr %d %d %e %e %e %e\n",
         array_lengths[i],
         i,
         thread_time[i].cpu_t_finish - thread_time[i].cpu_t_start,
