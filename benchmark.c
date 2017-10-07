@@ -59,6 +59,7 @@ int main(int argc, char* argv[]) {
   int retVal;
 
 
+
   retVal = pthread_attr_init(&attr);
   if (retVal)
   {
