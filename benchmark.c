@@ -4,6 +4,7 @@
  * GPLv3
  */
 #include <stdio.h>
+#include <sys/types.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -51,20 +52,42 @@ int main(int argc, char* argv[]) {
   long       thread;
   pthread_t* thread_handles;
   pthread_attr_t attr;
-  //time_t t;
+  struct sched_param schedParam;
   double start, finish;
   int array_size = 5000;
   int step_size = -200;
+  int retVal;
 
 
+  retVal = pthread_attr_init(&attr);
+  if (retVal)
+  {
+      fprintf(stderr, "pthread_attr_init error %d\n", retVal);
+      exit(1);
+  }
 
-  pthread_attr_init(&attr);
-  if(pthread_attr_setschedpolicy(&attr, SCHED_OTHER) != 0)
-    fprintf(stderr, "Unable to set policy.\n");
+  retVal = pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
+  if (retVal)
+  {
+    fprintf(stderr, "pthread_attr_setinheritsched error %d\n", retVal);
+    exit(1);
+  }
 
-  /* Intializes random number generator */
-  //srand((unsigned) time(&t));
+  retVal = pthread_attr_setschedpolicy(&attr, SCHED_RR);
+  if (retVal)
+  {
+    fprintf(stderr, "pthread_attr_setschedpolicy error %d\n", retVal);
+    exit(1);
+  }
 
+  schedParam.sched_priority = 1;
+
+  retVal = pthread_attr_setschedparam(&attr, &schedParam);
+  if (retVal)
+  {
+    fprintf(stderr, "pthread_attr_setschedparam error %d\n", retVal);
+    exit(1);
+  }
 
   // Create data arrays
   int rank[NUMBER_THREADS];
@@ -76,7 +99,6 @@ int main(int argc, char* argv[]) {
     array_lengths[i] = array_size;
     data_arrays[i] = malloc(sizeof(int)*array_lengths[i]);
     for(int j = 0; j < array_lengths[i]; j++){
-      //data_arrays[i][j] = rand() % 255;
       data_arrays[i][j] = array_lengths[i] - j;
     }
     array_size += step_size;
@@ -89,13 +111,21 @@ int main(int argc, char* argv[]) {
 
   // Starting Threads
   for(thread = 0; thread < NUMBER_THREADS; thread++){
-    pthread_create(&thread_handles[thread], &attr, Pth_empty, &rank[thread]);
+    retVal = pthread_create(&thread_handles[thread], &attr, Pth_empty, &rank[thread]);
+    if (retVal){
+        fprintf(stderr, "return value pthread_create: %d\n", retVal);
+        exit(1);
+    }
     GET_WALL_TIME(thread_time[thread].wall_t_create);
   }
 
   // Collecting Threads
   for(thread = 0; thread < NUMBER_THREADS; thread++){
-    pthread_join(thread_handles[thread], NULL);
+    retVal = pthread_join(thread_handles[thread], NULL);
+    if (retVal){
+      fprintf(stderr, "return value pthread_join: %d\n", retVal);
+      exit(1);
+    }
   }
 
   // Time stamp for total runtime
@@ -103,15 +133,16 @@ int main(int argc, char* argv[]) {
 
   // data output to stdout:
   // CPU time, Wall time, Wall time create until run, wall time run until finish
+
   for(int i = 0; i < NUMBER_THREADS; i++){
-    printf("sched_other dec %d %d %e %e %e %e\n",
+    printf("sched_rr dec %d %d %e %e %e %e\n",
         array_lengths[i],
         i,
         thread_time[i].cpu_t_finish - thread_time[i].cpu_t_start,
         thread_time[i].wall_t_finish - thread_time[i].wall_t_create,
         thread_time[i].wall_t_run - thread_time[i].wall_t_create,
         thread_time[i].wall_t_finish - thread_time[i].wall_t_run);
-  }
+	}
 
   free(thread_handles);
 
