@@ -54,12 +54,12 @@ int main(int argc, char* argv[]) {
   //time_t t;
   double start, finish;
   int array_size = 5000;
-  int step_size = -200;
+  int step_size = 0;
 
 
 
   pthread_attr_init(&attr);
-  if(pthread_attr_setschedpolicy(&attr, SCHED_OTHER) != 0)
+  if(pthread_attr_setschedpolicy(&attr, SCHED_FIFO) != 0)
     fprintf(stderr, "Unable to set policy.\n");
 
   /* Intializes random number generator */
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
   // data output to stdout:
   // CPU time, Wall time, Wall time create until run, wall time run until finish
   for(int i = 0; i < NUMBER_THREADS; i++){
-    printf("sched_other dec %d %d %e %e %e %e\n",
+    printf("sched_fifo high %d %d %e %e %e %e\n",
         array_lengths[i],
         i,
         thread_time[i].cpu_t_finish - thread_time[i].cpu_t_start,
