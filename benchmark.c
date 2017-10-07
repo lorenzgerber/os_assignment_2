@@ -1,3 +1,8 @@
+/*
+ * Benchmarking tool for Linux Schedulers
+ * Lorenz Gerber, October 2017
+ * GPLv3
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>

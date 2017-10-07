@@ -1,26 +1,10 @@
-/* File:     timer.h
+/*
+ * Macros for time keeping
  *
- * Purpose:  Define a macro that returns the number of seconds that
- *           have elapsed since some point in the past.  The timer
- *           should return times with microsecond accuracy.
+ * Lorenz Gerber, October 2017,
+ * modified from Pacheco (2011, Parallel Programming)
  *
- * Note:     The argument passed to the GET_TIME macro should be
- *           a double, *not* a pointer to a double.
- *
- * Example:
- *    #include "timer.h"
- *    . . .
- *    double start, finish, elapsed;
- *    . . .
- *    GET_TIME(start);
- *    . . .
- *    Code to be timed
- *    . . .
- *    GET_TIME(finish);
- *    elapsed = finish - start;
- *    printf("The code to be timed took %e seconds\n", elapsed);
- *
- * IPP:  Section 3.6.1 (pp. 121 and ff.) and Section 6.1.2 (pp. 273 and ff.)
+ * Args should be double, not pointer to double.
  */
 #ifndef _TIMER_H_
 #define _TIMER_H_
