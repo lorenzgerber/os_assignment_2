@@ -114,12 +114,13 @@ int main(int argc, char* argv[]) {
 
   // Starting Threads
   for(thread = 0; thread < NUMBER_THREADS; thread++){
+    GET_WALL_TIME(thread_time[thread].wall_t_create);
     retVal = pthread_create(&thread_handles[thread], &attr, Pth_empty, &rank[thread]);
     if (retVal){
         fprintf(stderr, "return value pthread_create: %d\n", retVal);
         exit(1);
     }
-    GET_WALL_TIME(thread_time[thread].wall_t_create);
+
   }
 
   // Collecting Threads
