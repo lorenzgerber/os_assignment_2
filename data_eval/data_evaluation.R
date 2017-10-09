@@ -9,8 +9,124 @@ header<-c("scheduler", "load_type", "sort_size", "thread_rank", "cpu_time", "wal
 colnames(per_thread)<-header
 attach(per_thread)
 
+par(mfcol=c(4,3))
 
+## Plotting
+## Wall Time
 other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "incr")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "incr")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "incr")
+plot(fifo_inc[,3], fifo_inc[,6], col="blue", main="Wall Time", sub="Increasing length of Task Size (n = 5)",xlab="task size", ylab="seconds", pch=2)
+points(rr_inc[,3], rr_inc[,6], col="red", pch=1)
+points(other_inc[,3], other_inc[,6], col="black", pch=0)
+legend(1000,12,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "decr")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "decr")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "decr")
+plot(fifo_inc[,3], fifo_inc[,6], col="blue", main="Wall Time", sub="Decreasing length of Task Size (n = 5)",xlab="task size", ylab="seconds", pch=2)
+points(rr_inc[,3], rr_inc[,6], col="red", pch=1)
+points(other_inc[,3], other_inc[,6], col="black", pch=0)
+legend(1200,12,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "low")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "low")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "low")
+plot(other_inc[,4], other_inc[,6], col="black", ylim = c(0,1.4), main="Wall Time", sub="Short length of Task Size (n = 5)",xlab="thread rank", ylab="seconds", pch=0)
+points(rr_inc[,4], rr_inc[,6], col="red", pch=1)
+points(fifo_inc[,4], fifo_inc[,6], col="blue", pch=2)
+legend(0,1,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "high")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "high")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "high")
+plot(other_inc[,4], other_inc[,6], col="black", pch=0, ylim=c(0,34.60), main="Wall Time", sub="Long length of Task Size (n = 5)",xlab="thread rank", ylab="seconds")
+points(rr_inc[,4], rr_inc[,6], col="red", pch=1)
+points(fifo_inc[,4], fifo_inc[,6], col="blue", pch=2)
+legend(0,30,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+
+
+
+## Plotting
+## wall create to run
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "incr")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "incr")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "incr")
+plot(fifo_inc[,3], fifo_inc[,7], col="blue", pch=2, main="Create-until-run (wall time)", sub="Increasing length of Task Size (n = 5)",xlab="task size", ylab="seconds")
+points(rr_inc[,3], rr_inc[,7], col="red", pch=1)
+points(other_inc[,3], other_inc[,7], col="black", pch=0)
+legend(1000,10,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "decr")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "decr")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "decr")
+plot(fifo_inc[,3], fifo_inc[,7], col="blue", pch=2, main="Create-until-run (wall time)", sub="Decreasing length of Task Size (n = 5)",xlab="task size", ylab="seconds")
+points(rr_inc[,3], rr_inc[,7], col="red", pch=1)
+points(other_inc[,3], other_inc[,7], col="black",pch=0)
+legend(1200,12,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "low")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "low")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "low")
+plot(other_inc[,4], other_inc[,7], col="black", pch=0, ylim = c(0,1.4), main="Create-until-run (wall time)", sub="Short length of Task Size (n = 5)",xlab="thread rank", ylab="seconds")
+points(rr_inc[,4], rr_inc[,7], col="red", pch=1)
+points(fifo_inc[,4], fifo_inc[,7], col="blue", pch=2)
+legend(0,1,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "high")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "high")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "high")
+plot(fifo_inc[,4], fifo_inc[,7], col="blue", pch=2, main="Create-until-run (wall time)", sub="Long length of Task Size (n = 5)",xlab="thread rank", ylab="seconds")
+points(rr_inc[,4], rr_inc[,7], col="red", pch=1)
+points(other_inc[,4], other_inc[,7], col="black", pch=0)
+legend(0,25,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+
+
+
+
+## Plotting
+## wall run to finish
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "incr")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "incr")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "incr")
+plot(other_inc[,3], other_inc[,8], col="black", pch=0, ylim=c(0,13),main="Run-until-finish (wall time)", sub="Increasing length of Task Size (n = 5)",xlab="task size", ylab="seconds")
+points(fifo_inc[,3], fifo_inc[,8], col="blue", pch=2)
+points(rr_inc[,3], rr_inc[,8], col="red", pch=1)
+legend(1000,10,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "decr")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "decr")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "decr")
+plot(other_inc[,3], other_inc[,8], ylim=c(0,15), col="black", pch=0, main="Run-until-finish (wall time)", sub="Decreasing length of Task Size (n = 5)",xlab="task size", ylab="seconds")
+points(fifo_inc[,3], fifo_inc[,8], col="blue", pch=2)
+points(rr_inc[,3], rr_inc[,8], col="red", pch=1)
+legend(1200,10,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "low")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "low")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "low")
+plot(other_inc[,4], other_inc[,8], col="black", pch=0, ylim = c(0,1.5), main="Run-until-finish (wall time)", sub="Short length of Task Size (n = 5)",xlab="thread rank", ylab="seconds")
+points(rr_inc[,4], rr_inc[,8], col="red", pch=1)
+points(fifo_inc[,4], fifo_inc[,8], col="blue", pch=2)
+legend(0,1,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+other_inc <- filter(per_thread, scheduler == "sched_other", load_type == "high")
+rr_inc <- filter(per_thread, scheduler == "sched_rr", load_type == "high")
+fifo_inc <- filter(per_thread, scheduler == "sched_fifo", load_type == "high")
+plot(fifo_inc[,4], fifo_inc[,8], col="blue", pch=2, ylim=c(0,35), main="Run-until-finish (wall time)", sub="Long length of Task Size (n = 5)",xlab="thread rank", ylab="seconds")
+points(rr_inc[,4], rr_inc[,8], col="red", pch=1)
+points(other_inc[,4], other_inc[,8], col="black", pch=0)
+legend(0,25,c("CFS", "RR", "FIFO"), col=c("black", "red", "blue"), pch=c(0,1,2))
+
+
+
+
+#######
+
 by_rank<-group_by(other_inc, thread_rank)
 summarize(by_rank, sd(cpu_time), sd(wall_time), sd(wall_create_to_run), sd(run_to_finish))
 summarize(by_rank, mean(cpu_time), mean(wall_time), mean(wall_create_to_run), mean(run_to_finish))
